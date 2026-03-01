@@ -1,0 +1,4 @@
+DOMAIN = "ubus_hostmanager"
+
+DEFAULT_PORT = 8899
+SCAN_INTERVAL = 30

@@ -1,0 +1,8 @@
+{
+  "domain": "ubus_hostmanager",
+  "name": "OpenWrt Ubus Hostmanager",
+  "version": "0.1.0",
+  "iot_class": "local_polling",
+  "codeowners": [],
+  "config_flow": true
+}
