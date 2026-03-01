@@ -1,20 +1,14 @@
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from datetime import timedelta
 
-from .const import DOMAIN, SCAN_INTERVAL
+from .const import DOMAIN
 from .coordinator import HostmanagerCoordinator
 
 PLATFORMS = ["device_tracker"]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    coordinator = HostmanagerCoordinator(
-        hass=hass,
-        host=entry.data["host"],
-        port=entry.data["port"],
-    )
+    coordinator = HostmanagerCoordinator(hass, entry)
 
     await coordinator.async_config_entry_first_refresh()
 
@@ -22,6 +16,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
     return True
 
 
@@ -29,6 +24,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
     unload_ok = await hass.config_entries.async_unload_platforms(
         entry, PLATFORMS
     )
+
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id)
 

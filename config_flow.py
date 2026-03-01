@@ -1,9 +1,8 @@
 import voluptuous as vol
-
 from homeassistant import config_entries
-from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.const import CONF_HOST, CONF_PORT, CONF_USERNAME, CONF_PASSWORD
 
-from .const import DOMAIN, DEFAULT_PORT
+from .const import DOMAIN, DEFAULT_PORT, DEFAULT_ENDPOINT
 
 
 class UbusHostmanagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -22,6 +21,9 @@ class UbusHostmanagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_HOST): str,
                     vol.Optional(CONF_PORT, default=DEFAULT_PORT): int,
+                    vol.Required(CONF_USERNAME): str,
+                    vol.Required(CONF_PASSWORD): str,
+                    vol.Optional("endpoint", default=DEFAULT_ENDPOINT): str,
                 }
             ),
         )

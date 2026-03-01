@@ -1,4 +1,5 @@
 DOMAIN = "ubus_hostmanager"
 
 DEFAULT_PORT = 8899
+DEFAULT_ENDPOINT = "/ubus.sh"
 SCAN_INTERVAL = 30
