@@ -7,6 +7,8 @@ from homeassistant.const import CONF_HOST, CONF_PORT, CONF_USERNAME, CONF_PASSWO
 
 from .const import SCAN_INTERVAL
 
+import time
+
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -81,13 +83,26 @@ class HostmanagerCoordinator(DataUpdateCoordinator):
             await self._login()
             return await self._call_ubus(object_name, method)
 
+        _LOGGER.debug("Router response: %s", data)
+
         return data
 
     async def _async_update_data(self):
-        data = await self._call_ubus("hostmanager.device", "get")
+        _LOGGER.debug("Starting device refresh")
+
+        start = time.time()
+        try:
+            data = await self._call_ubus("hostmanager.device", "get")
+        except Exception as err:
+            _LOGGER.error("Failed to fetch devices: %s", err)
+            raise
+
+        _LOGGER.debug("Device refresh complete")
+        _LOGGER.debug("Refresh took %.2fs", time.time() - start)
 
         result = data.get("result", [])
         if len(result) < 2:
+            _LOGGER.warning("Unexpected ubus response: %s", data)
             return {}
 
         return result[1]

@@ -61,8 +61,17 @@ class HostmanagerScannerEntity(CoordinatorEntity, ScannerEntity):
     @property
     def ip_address(self):
         device = self._get_device()
-        ipv4 = device.get("ipv4", {})
-        for ip_info in ipv4.values():
-            if ip_info.get("state") == "connected":
-                return ip_info.get("address")
+        ipv4 = device.get("ipv4")
+
+        if not ipv4:
+            return None
+
+        if isinstance(ipv4, list):
+            return None
+
+        if isinstance(ipv4, dict):
+            for ip_info in ipv4.values():
+                if ip_info.get("state") == "connected":
+                    return ip_info.get("address")
+
         return None
